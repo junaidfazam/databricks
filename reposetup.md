@@ -26,6 +26,7 @@ This guide explains how to create a new repo in **Azure DevOps**, attach it to *
    - **Nickname**: Any identifier for your account.
    - **Username**: Azure DevOps user name.
    - **Password/Token**: Personal Access Token (PAT) from Azure DevOps.
+4. For Github, Install databrick is required
 
 ---
 
