@@ -1,6 +1,80 @@
-# Databricks Bundles – Quick Start Guide
+# Databricks CLI & Bundle Setup Guide
 
-This guide explains how to create, configure, and deploy Databricks Bundles.
+This document provides a step-by-step guide to install, configure, and use the **Databricks CLI** and **Bundles**.
+
+---
+
+## ⚙️ Install Databricks CLI
+
+Official docs: [Databricks CLI Installation](https://docs.databricks.com/aws/en/dev-tools/cli/)
+
+### Windows Installation (using Winget)
+
+1. Search for Databricks CLI:
+
+   ```powershell
+   winget search databricks
+   ```
+
+2. Install CLI:
+
+   ```powershell
+   winget install Databricks.DatabricksCLI
+   ```
+
+3. Verify installation:
+
+   ```powershell
+   databricks -v
+   ```
+
+---
+
+## 🔐 Authenticate with Databricks CLI
+
+1. Open PowerShell and run:
+
+   ```powershell
+   databricks auth login --host <DATABRICKS_WORKSPACE_URL>
+   ```
+
+   Example:
+
+   ```powershell
+   databricks auth login --host https://dbc-e46923f7-f175.cloud.databricks.com/
+   ```
+
+2. Enter a **profile name** when prompted.  
+3. A browser window will open → login with your Databricks credentials.  
+4. On success, CLI shows:
+
+   ```
+   Profile successfully saved.
+   ```
+
+5. To list saved profiles:
+
+   ```powershell
+   databricks auth profiles
+   ```
+
+6. Profile details are saved in:
+
+   ```
+   C:\Users\<your_user>\.databrickscfg
+   ```
+
+   Example to open file:
+
+   ```powershell
+   notepad.exe C:\Users\junai\.databrickscfg
+   ```
+
+7. To see all commands:
+
+   ```powershell
+   databricks --help
+   ```
 
 ---
 
@@ -27,8 +101,8 @@ cd my_project
 
 ## 📂 Project Structure
 
-- Delete or add folders as needed.
-- Update the `databricks.yml` file accordingly.
+- Delete/add folders as needed.
+- Update `databricks.yml` file accordingly.
 
 ---
 
@@ -50,16 +124,15 @@ databricks bundle deploy --profile junaid_dab --target dev
 
 1. Create a job in the UI.
 2. Switch to **YAML view** and copy the code.
-3. In your local project:
-   - Create a folder: `resources/job/`
+3. In local project:
+   - Create folder: `resources/job/`
    - Add file: `jobs.yml`
-   - Paste the job YAML code.
-   - Update relative paths using `../../` (use `/../` to go one folder up).
-4. Ensure `jobs.yml` is included in `databricks.yml` resources.
-5. Deploy the bundle again.
+   - Paste job YAML.
+   - Update relative paths (`../../` → use `/../` to go up).
+4. Ensure `jobs.yml` is included in `databricks.yml`.
+5. Redeploy bundle.
 
-👉 The job will be created in Databricks.  
-Jobs created via bundle will show a warning:
+👉 Any job created will display:
 
 ```
 This task was deployed as part of a bundle, avoid editing this copy, 
@@ -71,22 +144,22 @@ instead edit the source and redeploy the bundle.
 ## 🎛️ Custom Presets & Source Linked Deployment
 
 ### Default Preset
-- Deployed resources are prefixed with `[dev my_user_name]`.
-- Equivalent to `[dev ${workspace.current_user.short_name}]`.
-- You can override the name.
+- Resources prefixed with `[dev my_user_name]`.
+- Same as `[dev ${workspace.current_user.short_name}]`.
+- Can be overridden.
 
 ### Modes
+
 ✅ **Development (default, source-linked)**  
-- Jobs reference actual workspace notebooks.  
-- Changes are reflected immediately without redeploy.  
-- Great for rapid iteration and debugging.  
+- Jobs reference workspace notebooks directly.  
+- Changes reflect instantly without redeployment.  
+- Great for debugging & iteration.  
 
 ✅ **QA / Production (`source_linked_deployment: false`)**  
-- Jobs reference the bundled notebook copy.  
-- Prevents unintended changes.  
-- Ensures stability and reproducibility.  
+- Jobs reference bundled notebook copies.  
+- Ensures reproducibility and stability.  
 
-### Example Preset in `databricks.yml`
+### Example in `databricks.yml`
 
 ```yaml
 targets:
@@ -102,11 +175,13 @@ targets:
 ## 📸 Deployment Snapshots
 
 - Location:  
+
   ```
   my_project/.databricks/bundle/dev/sync-snapshots
   ```
-- Tracks changes (NEW/UPDATED files only).
-- For **deletions**, best practice is to delete `.databricks` and redeploy.
+
+- Tracks **NEW/UPDATED** files only.
+- For deletions → delete `.databricks` folder and redeploy.
 
 ---
 
@@ -116,6 +191,7 @@ targets:
   ```bash
   databricks bundle summary --profile junaid_dab --target dev
   ```
+
 - **Validate:**
   ```bash
   databricks bundle validate --profile junaid_dab --target dev
@@ -125,7 +201,7 @@ targets:
 
 ## 🌐 Deploy to Other Targets
 
-Add a new target in `databricks.yml`:
+Update `databricks.yml`:
 
 ```yaml
 targets:
@@ -143,20 +219,23 @@ targets:
 
 ## 🔄 Pulling Bundles from Databricks
 
-❌ There is **no `bundle pull` command**.  
-✅ Options:
-- Clone from Git (if bundle is source-controlled).  
+❌ No `bundle pull` command exists.  
+
+✅ Options:  
+- Clone from Git (if bundle managed in Git).  
 - Export workspace files (if bundle only exists in Databricks).  
 
 ---
 
 ## ✅ Best Practices
 
-- Use **development mode (source-linked)** for iteration.  
-- Use **QA/Production mode** (`source_linked_deployment: false`) for stability.  
-- Always **commit YAML configs** to Git for reproducibility.  
-- For clean redeployments, delete `.databricks` before redeploying.  
+- Use **dev/source-linked** for iteration.  
+- Use **QA/Prod** with `source_linked_deployment: false` for stability.  
+- Commit configs to Git for reproducibility.  
+- For clean deployments, delete `.databricks` before redeploying.  
 
 ---
 
-📖 Reference: [Databricks Bundles Documentation](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+📖 References:
+- [Databricks Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+- [Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/)
