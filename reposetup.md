@@ -31,12 +31,12 @@ This guide explains how to create a new repo in **Azure DevOps**, attach it to *
 
 ## 3. Link Repo in Databricks
 
-1. In Databricks **Workspace → Repos**, click **Create Repo**.
+1. In Databricks **Workspace → Repos**, click **Create Repo** or create Git folder directly in workspace.
 2. Enter:
    - **Git Provider**: Azure DevOps.
    - **Git URL**: Repository URL from Azure DevOps.
    - **Repository Name**: Name for your repo in Databricks.
-3. The repo is now linked.
+3. The repo is now linked.   
 
 ---
 
