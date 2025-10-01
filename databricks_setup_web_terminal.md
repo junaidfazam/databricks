@@ -7,9 +7,9 @@ This guide outlines the steps to create and manage Databricks bundles, jobs, var
 ## 1. Git Setup
 
 1. In your **Workspace** 
-  - craete a git folder (example: `databricks`):
-   - Create a feature branch(`feature/dab_demo_1`).
-   - Switch from `main` to `feature/dab_demo_1`.
+  - Create a git folder (example: `databricks`):
+  - Create a feature branch(`feature/dab_demo_1`).
+  - Switch from `main` to `feature/dab_demo_1`.
 
    > **Note:** `databricks`  setup in Git might be required.
 
