@@ -1,0 +1,14 @@
+resources:
+  jobs:
+    dab_job_1:
+      name: dab_job_1
+      tasks:
+        - task_key: dab_job_task_1
+          notebook_task:
+            notebook_path: /../../src/notebooks/ingestion.py
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
