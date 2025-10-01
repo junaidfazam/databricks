@@ -6,16 +6,14 @@ This guide outlines the steps to create and manage Databricks bundles, jobs, var
 
 ## 1. Git Setup
 
-1. In your **git folder** (example: `databricks`):
-   - Create a feature branch:
-     ```bash
-     git checkout -b feature/dab_demo_1
-     ```
+1. In your **Workspace** 
+  - craete a git folder (example: `databricks`):
+   - Create a feature branch(`feature/dab_demo_1`).
    - Switch from `main` to `feature/dab_demo_1`.
 
-   > **Note:** Folder name `databricks` in Git might be required.
+   > **Note:** `databricks`  setup in Git might be required.
 
-2. Create a folder `notebooks` and add `notebook1` within it in Databricks.
+2. Create a folder `notebooks` and add `ingestion.ipynb` within it in `databricks`.
 
 ---
 
@@ -35,7 +33,7 @@ This guide outlines the steps to create and manage Databricks bundles, jobs, var
 
 ## 3. Running Commands without Profile Name
 
-Run Databricks commands **without specifying the profile name**:
+Run Databricks commands **without specifying the profile name** in web terminal:
 
 ```bash
 databricks bundle deploy --target dev
