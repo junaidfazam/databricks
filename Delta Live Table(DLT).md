@@ -83,10 +83,20 @@ def silver_orders():
 
 ## Table Types in Databricks & DLT
 
-### 1. Managed Table
-- Databricks manages metadata + storage.  
-- Default in DLT.  
-- Dropping removes **both metadata + data**.  
+### Managed Tables
+A **Managed Table** (also called an *internal table*) means Databricks/Delta Lake manages both the metadata and the underlying data files.
+
+**Requirements:**
+- **Location Not Specified** → You don’t provide a `LOCATION` clause.  
+- Data will be stored inside the default database location (usually under:  
+  `dbfs:/user/hive/warehouse/<database>.db/<table_name>`).  
+- **Catalog/Schema Context** → You must be connected to a database/schema where the table will be stored.  
+  Example: `USE my_database;`  
+- **DDL Command** → Use `CREATE TABLE` or `CREATE OR REPLACE TABLE` **without** specifying `LOCATION`.
+
+**Behavior:**
+- Dropping the table deletes both metadata and the underlying data files.  
+- Good for when you want Databricks to fully control the lifecycle.  
 
 **Example (SQL):**
 ```sql
@@ -105,16 +115,29 @@ def customers_bronze():
 
 ---
 
-### 2. External Table
-- Data stored in user-specified location.  
-- Dropping removes **metadata only** (files remain).  
-- Useful for shared raw data.  
+### External Tables
+An **External Table** means Databricks manages only the metadata, while the data files live in a user-specified location (e.g., **S3, ADLS, GCS, or DBFS**).
+
+**Requirements:**
+- **Explicit LOCATION Required** → You must specify the path with `LOCATION '/mnt/.../path'`.  
+- **Data Files Exist (or Will Be Written)** → You can either:  
+  - Point to existing data files, OR  
+  - Let Databricks write new data there.  
+- **Permissions** → User/service principal must have read/write access to the external storage location.  
+
+**Behavior:**
+- Dropping the table only deletes metadata, but the files remain in storage.  
+- Useful for sharing data across multiple systems or retaining files after dropping tables.  
 
 **Example:**
 ```sql
-CREATE OR REFRESH LIVE TABLE external_sales
-LOCATION "/mnt/external/sales"
-AS SELECT * FROM cloud_files("/mnt/raw/sales", "csv");
+CREATE TABLE sales_external (
+  id INT,
+  amount DECIMAL(10,2),
+  created_date DATE
+)
+USING DELTA
+LOCATION '/mnt/external-data/sales/';
 ```
 
 ---
