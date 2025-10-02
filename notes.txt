@@ -1,0 +1,67 @@
+In git folder(say folder name as databricks)
+create a feature branch(feature/dab_demo_1) and switch from main to feature/dab_demo_1
+Note:- databricks in Git might be required.
+create a folder notebooks and notebook1 within it in databricks
+start a serverless compute 
+start a web Terminal(ctrl+`) or clcik right left bottom to get Terminal
+run ls command and cd to move to git folder(databricks)
+Now execute all command that without profile name(--p profile_name)
+
+How to include parameter in job
+
+in a notebook
+
+%python
+dbutils.widgets.text("catalog name","dev")
+catalog_name = dbutils.widgets.get("catalog name")
+
+%python
+df= spark.sql(f" SELECT * FROM {catalog_name}.information_schema.catalogs")
+display(df)
+
+Create two jobs and variables in respective yml file in each within resource folder
+Doc reference - https://docs.databricks.com/aws/en/dev-tools/bundles/variables
+variables.yml
+  variables:
+  catalog_name:
+    description: The ID of an existing cluster.
+    default: dev
+
+Create a job and also use parameter, give catalog name and default value.
+Copy the job's file data and paste in jobs.yml and update the catalog_name
+jobs.yml
+  resources:
+  jobs:
+    dab_job_1:
+      name: dab_job_1
+      tasks:
+        - task_key: dab_job_task_1
+          notebook_task:
+            notebook_path: /../../src/notebooks/ingestion.py
+            base_parameters:
+              catalog name: ${var.cata}
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
+
+Create a new ELT pipline - dab_etl_pipline_1
+starts with python 
+create a file in tranformation folder- dab_transformaltion.py
+
+import dlt
+@dlt.table
+def transformed():
+    return spark.range(10)
+
+Run the code as dry run
+create a folder piplines with src
+right clcik and move the root of dab_etl_pipline_1 to piplines folder created earlier
+
+create a folder piplines with resource
+copy the yml code of piplines
+create a file piplines.yml and paste the code
+Update teh relative path and catalog name to be fetched from variable
+Add presets in target and deplay the bundle
+You can provide the varaible value while deploying
+databricks bundle deploy --target prod --var catalog_name="prod"
